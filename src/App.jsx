@@ -3,8 +3,6 @@ import HeaderMenu from "./components/HeaderMenu";
 import React, { useState } from 'react';
 import MusicPlayer from "./components/MusicPlayer";
 
-
-
 function App() {
   const [isOpen, setIsOpen] = useState(true);
   const toggleOpen = () => setIsOpen(!isOpen);
