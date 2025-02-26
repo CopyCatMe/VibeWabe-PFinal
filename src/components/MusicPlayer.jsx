@@ -8,6 +8,7 @@ function MusicPlayer({ isOpen }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const audioRef = useRef(null);
   const progressRef = useRef(null);
@@ -27,7 +28,7 @@ function MusicPlayer({ isOpen }) {
   }, []);
 
   const updateTime = () => {
-    if (audioRef.current) {
+    if (audioRef.current && !isDragging) {
       setCurrentTime(audioRef.current.currentTime);
       setProgress(audioRef.current.currentTime / audioRef.current.duration);
     }
@@ -50,11 +51,21 @@ function MusicPlayer({ isOpen }) {
     }
   };
 
+  const handleMouseDown = () => setIsDragging(true);
+  const handleMouseUp = (e) => {
+    setIsDragging(false);
+    handleProgressClick(e);
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) handleProgressClick(e);
+  };
+
   const handleProgressClick = (e) => {
     if (!progressRef.current || !audioRef.current) return;
     const rect = progressRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
-    const newProgress = offsetX / rect.width;
+    const newProgress = Math.min(Math.max(offsetX / rect.width, 0), 1);
     setProgress(newProgress);
     audioRef.current.currentTime = newProgress * audioRef.current.duration;
   };
@@ -91,11 +102,11 @@ function MusicPlayer({ isOpen }) {
       <audio ref={audioRef} src="/pruebasmp3/donpollo.mp3"></audio>
 
       {/* Barra de Progreso */}
-      <div className="w-full mb-3">
+      <div className="w-full mb-3" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
         <div
           ref={progressRef}
           className="relative w-full h-2 bg-[#444] rounded-full cursor-pointer"
-          onClick={handleProgressClick}
+          onMouseDown={handleMouseDown}
         >
           <div
             className="absolute top-0 left-0 h-full bg-[#ff6347] rounded-full"
@@ -126,9 +137,9 @@ function MusicPlayer({ isOpen }) {
       {/* Control de Volumen */}
       <div className="absolute right-5 bottom-8 flex items-center gap-3">
         <button className="text-white hover:text-gray-300 transition-colors" onClick={toggleMute}>
-          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-6 h-6" />}
+          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
         </button>
-        <div className="relative w-28 h-1 bg-gray-600 rounded-full">
+        <div className="relative w-24 h-2 bg-[#444] rounded-full">
           <div
             className="absolute top-0 left-0 h-full bg-[#ff6347] rounded-full"
             style={{ width: `${volume * 100}%` }}
