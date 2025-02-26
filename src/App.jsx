@@ -1,4 +1,4 @@
-import AsideMenu from "./components/asideMenu";
+import AsideMenu from "./components/AsideMenu";
 import HeaderMenu from "./components/HeaderMenu";
 import React, { useState } from 'react';
 import MusicPlayer from "./components/MusicPlayer";
