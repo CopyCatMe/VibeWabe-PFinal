@@ -17,7 +17,7 @@ function SectionMusic({ isOpen, onSelectSong }) {
     };
 
     return (
-        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 m-10 pb-25 transition-all duration-300 w-[80%] ${isOpen ? '' : 'ml-[-230px]'}`}>
+        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 m-10 pb-25 transition-all duration-300 w-[80%] ${isOpen ? '' : 'ml-[-200px]'}`}>
             {songs.slice(0, 8).map((song, index) => (
                 <div
                     key={index}
@@ -28,7 +28,7 @@ function SectionMusic({ isOpen, onSelectSong }) {
                     <img
                         src={song.image || `https://placehold.co/400x400/${generateRandomColor()}/white?text=${song.title[0]}`}
                         alt={song.title || 'Unknown Song'}
-                        className="w-full h-40 object-cover rounded-md mb-4 transition-all duration-300 hover:opacity-50 cursor-pointer"
+                        className="w-35 h-35 object-cover rounded-md mb-4 transition-all duration-300 hover:opacity-50 cursor-pointer"
                         draggable="false"
                     />
                     <div className="text-center w-full">
