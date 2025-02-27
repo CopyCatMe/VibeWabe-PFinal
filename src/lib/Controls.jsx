@@ -1,6 +1,14 @@
 import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart } from "lucide-react";
 
-function Controls({ isPlaying, togglePlayPause, audioRef, isLooping, toggleLoop, previousSong, nextSong }) {
+function Controls({
+    isPlaying,
+    togglePlayPause,
+    audioRef,
+    isLooping,
+    toggleLoop,
+    prevSong,
+    nextSong,
+}) {
     return (
         <div className="flex items-center gap-4">
             {/* Botón de Repetir */}
@@ -14,7 +22,7 @@ function Controls({ isPlaying, togglePlayPause, audioRef, isLooping, toggleLoop,
             {/* Botón de Volver Atrás */}
             <button
                 className="bg-[#333] hover:bg-[#444] rounded-full p-2 transition-all cursor-pointer"
-                onClick={previousSong}
+                onClick={prevSong} // Conectando la función previousSong
             >
                 <SkipBack className="w-4 h-4 text-white" />
             </button>
@@ -30,19 +38,15 @@ function Controls({ isPlaying, togglePlayPause, audioRef, isLooping, toggleLoop,
             {/* Botón de Siguiente */}
             <button
                 className="bg-[#333] hover:bg-[#444] rounded-full p-2 transition-all cursor-pointer"
-                onClick={nextSong}
+                onClick={nextSong} // Conectando la función nextSong
             >
                 <SkipForward className="w-4 h-4 text-white" />
             </button>
 
             {/* Botón de Aleatorio */}
-            <button
-                className="transition-all cursor-pointer"
-            >
+            <button className="transition-all cursor-pointer">
                 <Shuffle className="w-4 h-4 text-white" />
             </button>
-
-
         </div>
     );
 }
