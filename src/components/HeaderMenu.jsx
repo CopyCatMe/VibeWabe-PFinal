@@ -19,7 +19,6 @@ function HeaderMenu({ isOpen, toggleOpen }) {
         <MessageSquare className="text-gray-400 mr-3 hover:text-white cursor-pointer" />
         <div className="h-6 w-px bg-gray-600 mr-3" />
         <User className="text-gray-400 hover:text-white mr-3 cursor-pointer rounded-full border-2 border-gray-600" />
-        <p className="text-gray-400 text-sm hover:text-white cursor-pointer">Login</p>
       </div>
     </nav>
   );
