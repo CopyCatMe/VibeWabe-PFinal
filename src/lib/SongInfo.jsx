@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import React from "react";
 
 function SongInfo({ song = {} }) {
@@ -15,6 +16,12 @@ function SongInfo({ song = {} }) {
                 <p className="font-semibold text-sm truncate max-w-[120px] cursor-pointer hover:underline">{song.title || "Unknown Song"}</p>
                 <p className="text-xs text-gray-400 cursor-pointer hover:underline">{song.artist || "Unknown Artist"}</p>
             </div>
+            {/* Botón de Like */}
+            <button
+                className="transition-all cursor-pointer bg-[#333] hover:bg-[#444] rounded-full p-2 ml-6"
+            >
+                <Heart className="w-4 h-4 text-white" />
+            </button>
         </div>
     );
 }

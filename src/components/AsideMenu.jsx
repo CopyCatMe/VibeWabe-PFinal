@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// Lista de menús (como ejemplo)
 const menu = [
   { name: "Add", img: "/menu/add.png" },
   { name: "Playlists", img: "/menu/playlist.png" },
@@ -14,7 +13,8 @@ function AsideMenu({ isOpen }) {
     <aside
       className={`bg-[#1E1E1E] h-[calc(100vh-30px)] rounded-3xl m-3 mr-0 
         transition-all duration-300 
-        ${isOpen ? "translate-x-0 visible opacity-100" : "-translate-x-full invisible "}`}
+        ${isOpen ? "translate-x-0 visible opacity-100" : "-translate-x-full invisible "}
+        hidden md:block`}
     >
       <div className="h-full w-[230px] flex flex-col p-4">
         {/* Logo */}

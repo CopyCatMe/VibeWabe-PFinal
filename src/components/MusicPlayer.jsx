@@ -155,7 +155,7 @@ function MusicPlayer({ isOpen }) {
 
 
   return (
-    <footer className={`fixed bottom-5 left-[260px] w-[calc(100%-280px)] bg-[#1E1E1E] rounded-2xl shadow-lg p-4 transition-all duration-300 ${isOpen ? "" : "translate-x-[-125px]"}`}>
+    <footer className={`fixed bottom-0 left-0 w-full md:left-[260px] md:w-[calc(100%-280px)] bg-[#1E1E1E] shadow-lg transition-all duration-300 md:bottom-5 ${isOpen ? "" : "translate-x-[-125px]"} ${isOpen ? "p-4 md:rounded-2xl" : "p-0"}`}>
       <audio ref={audioRef} src={songs[currentSongIndex].src}></audio>
 
       {/* Barra de Progreso */}
@@ -173,9 +173,6 @@ function MusicPlayer({ isOpen }) {
         isDragging={isDragging}
         setIsDragging={setIsDragging}
       />
-
-
-
 
       {/* Controles */}
       <div className="flex items-center justify-between w-full">

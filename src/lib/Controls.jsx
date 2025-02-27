@@ -1,4 +1,4 @@
-import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Heart } from "lucide-react";
 
 function Controls({ isPlaying, togglePlayPause, audioRef, isLooping, toggleLoop, previousSong, nextSong }) {
     return (
@@ -41,6 +41,8 @@ function Controls({ isPlaying, togglePlayPause, audioRef, isLooping, toggleLoop,
             >
                 <Shuffle className="w-4 h-4 text-white" />
             </button>
+
+
         </div>
     );
 }
