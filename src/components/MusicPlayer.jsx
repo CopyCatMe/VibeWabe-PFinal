@@ -155,7 +155,7 @@ function MusicPlayer({ isOpen }) {
 
 
   return (
-    <footer className={`fixed bottom-0 left-0 w-full md:left-[260px] md:w-[calc(100%-280px)] bg-[#1E1E1E] shadow-lg transition-all duration-300 md:bottom-5 ${isOpen ? "" : "translate-x-[-125px]"} ${isOpen ? "p-4 md:rounded-2xl" : "p-0"}`}>
+    <footer className={`fixed bottom-0 left-0 w-full md:left-[260px] md:w-[calc(100%-280px)] bg-[#1E1E1E] shadow-lg transition-all duration-300 md:bottom-5 ${isOpen ? "" : "rounded-3xl p-4 translate-x-[-125px]"} ${isOpen ? "p-4 md:rounded-3xl" : ""}`}>
       <audio ref={audioRef} src={songs[currentSongIndex].src}></audio>
 
       {/* Barra de Progreso */}
