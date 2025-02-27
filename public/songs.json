@@ -1,0 +1,17 @@
+[
+    {
+      "title": "Peldel Tiempo",
+      "grupo": "Don Pollo",
+      "image": "./donpollo.png",
+      "url": "./donpollo.mp3"
+    },
+    {
+      "title": "Song 2",
+      "url": "/path/to/song2.mp3"
+    },
+    {
+      "title": "Song 3",
+      "url": "/path/to/song3.mp3"
+    }
+  ]
+  

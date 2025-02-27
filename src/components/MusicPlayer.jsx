@@ -1,5 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import ProgressBar from "../lib/ProgressBar";
+import Controls from "../lib/Controls";
+import VolumeControl from "../lib/VolumeControl";
+import SongInfo from "../lib/SongInfo.jsx";
+import songs from "../lib/Songs.jsx";
 
 function MusicPlayer({ isOpen }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -9,28 +13,37 @@ function MusicPlayer({ isOpen }) {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   const audioRef = useRef(null);
-  const progressRef = useRef(null);
+  const fadeOutTimeoutRef = useRef(null);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
-      audio.addEventListener('timeupdate', updateTime);
-      audio.addEventListener('loadedmetadata', updateDuration);
+      audio.loop = isLooping;
+      audio.addEventListener("timeupdate", updateTime);
+      audio.addEventListener("loadedmetadata", updateDuration);
+      audio.addEventListener("ended", handleSongEnd);
     }
     return () => {
       if (audio) {
-        audio.removeEventListener('timeupdate', updateTime);
-        audio.removeEventListener('loadedmetadata', updateDuration);
+        audio.removeEventListener("timeupdate", updateTime);
+        audio.removeEventListener("loadedmetadata", updateDuration);
+        audio.removeEventListener("ended", handleSongEnd);
       }
     };
-  }, []);
+  }, [isLooping, currentSongIndex]);
 
   const updateTime = () => {
     if (audioRef.current && !isDragging) {
       setCurrentTime(audioRef.current.currentTime);
       setProgress(audioRef.current.currentTime / audioRef.current.duration);
+
+      if (audioRef.current.currentTime >= audioRef.current.duration - 1) {
+        startFadeOut();
+      }
     }
   };
 
@@ -40,122 +53,145 @@ function MusicPlayer({ isOpen }) {
     }
   };
 
+  const fadeAudio = (targetVolume, duration, callback) => {
+    if (!audioRef.current) return;
+
+    const audio = audioRef.current;
+    const intervalTime = 50;
+    const volumeStep = (targetVolume - audio.volume) / (duration / intervalTime);
+
+    const fadeInterval = setInterval(() => {
+      if (
+        (volumeStep > 0 && audio.volume >= targetVolume) ||
+        (volumeStep < 0 && audio.volume <= targetVolume)
+      ) {
+        clearInterval(fadeInterval);
+        if (callback) callback();
+        return;
+      }
+      audio.volume = Math.min(Math.max(audio.volume + volumeStep, 0), 1);
+    }, intervalTime);
+  };
+
+  const startFadeOut = () => {
+    if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
+
+    fadeOutTimeoutRef.current = setTimeout(() => {
+      fadeAudio(0, 1000, () => {
+        setIsPlaying(false);
+        if (isLooping) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play();
+          fadeAudio(volume, 500);
+          setIsPlaying(true);
+        }
+      });
+    }, (duration - currentTime - 2) * 1000);
+  };
+
   const togglePlayPause = () => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
       setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleMouseDown = () => setIsDragging(true);
-  const handleMouseUp = (e) => {
-    setIsDragging(false);
-    handleProgressClick(e);
-  };
-
-  const handleMouseMove = (e) => {
-    if (isDragging) handleProgressClick(e);
-  };
-
-  const handleProgressClick = (e) => {
-    if (!progressRef.current || !audioRef.current) return;
-    const rect = progressRef.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const newProgress = Math.min(Math.max(offsetX / rect.width, 0), 1);
-    setProgress(newProgress);
-    audioRef.current.currentTime = newProgress * audioRef.current.duration;
-  };
-
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
-    setIsMuted(newVolume === 0);
-  };
-
-  const toggleMute = () => {
-    if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.volume = volume;
+      if (isPlaying) {
+        fadeAudio(0, 500, () => {
+          audioRef.current.pause();
+          audioRef.current.volume = volume;
+        });
       } else {
         audioRef.current.volume = 0;
+        audioRef.current.play();
+        fadeAudio(volume, 500);
       }
-      setIsMuted(!isMuted);
     }
   };
 
-  const formatTime = (time) => {
-    if (isNaN(time)) return "0:00";
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  const handleSongEnd = () => {
+    fadeAudio(0, 1000, () => {
+      setIsPlaying(false);
+      if (isLooping) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+        fadeAudio(volume, 500);
+        setIsPlaying(true);
+      } else {
+        nextSong();
+      }
+    });
   };
 
+  const nextSong = () => {
+    fadeAudio(0, 500, () => {
+      setCurrentSongIndex((prev) => (prev + 1) % songs.length);
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0; // Reiniciar la canción
+          audioRef.current.play();
+          fadeAudio(volume, 500);
+          setIsPlaying(true);
+        }
+      }, 500);
+    });
+  };
+
+  const prevSong = () => {
+    if (audioRef.current.currentTime > 5) {
+      // Si han pasado más de 5 segundos, solo reinicia la canción
+      audioRef.current.currentTime = 0;
+    } else {
+      // Si está en los primeros 5 segundos, cambia a la canción anterior
+      fadeAudio(0, 400, () => {
+        setCurrentSongIndex((prev) => (prev - 1 + songs.length) % songs.length);
+        setTimeout(() => {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0; // Reiniciar la canción
+            audioRef.current.play();
+            fadeAudio(volume, 500);
+            setIsPlaying(true);
+          }
+        }, 500);
+      });
+    }
+  };
+
+
+
   return (
-    <footer className={`fixed bottom-5 left-[260px] w-[calc(100%-280px)] bg-[#1E1E1E] rounded-2xl shadow-lg p-4 transition-all duration-300 ${isOpen ? '' : 'translate-x-[-125px]'}`}>
-      <audio ref={audioRef} src="/pruebasmp3/donpollo.mp3"></audio>
+    <footer className={`fixed bottom-5 left-[260px] w-[calc(100%-280px)] bg-[#1E1E1E] rounded-2xl shadow-lg p-4 transition-all duration-300 ${isOpen ? "" : "translate-x-[-125px]"}`}>
+      <audio ref={audioRef} src={songs[currentSongIndex].src}></audio>
 
       {/* Barra de Progreso */}
-      <div className="w-full mb-3" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-        <div
-          ref={progressRef}
-          className="relative w-full h-2 bg-[#444] rounded-full cursor-pointer"
-          onMouseDown={handleMouseDown}
-        >
-          <div
-            className="absolute top-0 left-0 h-full bg-[#ff6347] rounded-full"
-            style={{ width: `${progress * 100}%` }}
-          ></div>
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 mt-1">
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
+      <ProgressBar
+        progress={progress}
+        duration={duration}
+        currentTime={currentTime}
+        setProgress={setProgress}
+        setCurrentTime={(time) => (audioRef.current.currentTime = time)}
+        isDragging={isDragging}
+        setIsDragging={setIsDragging}
+      />
 
-      {/* Controles de Reproducción */}
-      <div className="flex items-center justify-center gap-6">
-        <button className="bg-[#333] hover:bg-[#444] rounded-full p-3 transition-all" onClick={() => audioRef.current.currentTime = 0}>
-          <SkipBack className="w-5 h-5 text-white" />
-        </button>
+      {/* Controles */}
+      <div className="flex items-center justify-between w-full">
+        {/* Información de la canción */}
+        <SongInfo song={songs[currentSongIndex]} />
 
-        <button className="bg-[#ff6347] hover:bg-[#ff7b63] rounded-full p-4 transition-all" onClick={togglePlayPause}>
-          {isPlaying ? <Pause className="w-6 h-6 text-white" /> : <Play className="w-6 h-6 text-white" />}
-        </button>
-
-        <button className="bg-[#333] hover:bg-[#444] rounded-full p-3 transition-all">
-          <SkipForward className="w-5 h-5 text-white" />
-        </button>
-      </div>
-
-      {/* Control de Volumen */}
-      <div className="absolute right-5 bottom-8 flex items-center gap-3">
-        <button className="text-white hover:text-gray-300 transition-colors" onClick={toggleMute}>
-          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-        </button>
-        <div className="relative w-24 h-2 bg-[#444] rounded-full">
-          <div
-            className="absolute top-0 left-0 h-full bg-[#ff6347] rounded-full"
-            style={{ width: `${volume * 100}%` }}
-          ></div>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={isMuted ? 0 : volume}
-            onChange={handleVolumeChange}
-            className="absolute top-[-4px] left-0 w-full h-3 opacity-0 cursor-pointer"
+        {/* Controles de reproducción */}
+        <div className="flex flex-1 justify-center">
+          <Controls
+            isPlaying={isPlaying}
+            togglePlayPause={togglePlayPause}
+            audioRef={audioRef}
+            isLooping={isLooping}
+            toggleLoop={() => setIsLooping(!isLooping)}
+            nextSong={nextSong}
+            previousSong={prevSong}
           />
-        </div>
-      </div>
 
+        </div>
+
+        {/* Control de Volumen */}
+        <VolumeControl audioRef={audioRef} volume={volume} setVolume={setVolume} isMuted={isMuted} setIsMuted={setIsMuted} />
+      </div>
     </footer>
   );
 }
