@@ -154,7 +154,6 @@ function MusicPlayer({ isOpen }) {
   };
 
 
-
   return (
     <footer className={`fixed bottom-5 left-[260px] w-[calc(100%-280px)] bg-[#1E1E1E] rounded-2xl shadow-lg p-4 transition-all duration-300 ${isOpen ? "" : "translate-x-[-125px]"}`}>
       <audio ref={audioRef} src={songs[currentSongIndex].src}></audio>
@@ -165,10 +164,18 @@ function MusicPlayer({ isOpen }) {
         duration={duration}
         currentTime={currentTime}
         setProgress={setProgress}
-        setCurrentTime={(time) => (audioRef.current.currentTime = time)}
+        setCurrentTime={(time) => {
+          setCurrentTime(time);
+          if (audioRef.current) {
+            audioRef.current.currentTime = time;
+          }
+        }}
         isDragging={isDragging}
         setIsDragging={setIsDragging}
       />
+
+
+
 
       {/* Controles */}
       <div className="flex items-center justify-between w-full">
