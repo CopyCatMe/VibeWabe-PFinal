@@ -21,10 +21,24 @@ function ProgressBar({ progress, duration, currentTime, setProgress, setCurrentT
     const handleProgressChange = (e) => {
         if (!progressRef.current) return;
         const rect = progressRef.current.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
+        const offsetX = e.clientX ? e.clientX - rect.left : e.touches[0].clientX - rect.left;
         const newProgress = Math.min(Math.max(offsetX / rect.width, 0), 1);
         setProgress(newProgress);
         setCurrentTime(newProgress * duration);
+    };
+
+    const handleTouchStart = (e) => {
+        setIsDragging(true);
+        handleProgressChange(e);
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        handleProgressChange(e);
+    };
+
+    const handleTouchEnd = () => {
+        setIsDragging(false);
     };
 
     const formatTime = (time) => {
@@ -40,12 +54,16 @@ function ProgressBar({ progress, duration, currentTime, setProgress, setCurrentT
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
         >
             {/* Barra de progreso */}
             <div
                 ref={progressRef}
                 className="relative w-full h-2 bg-[#444] rounded-full cursor-pointer"
                 onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
             >
                 {/* Progreso llenado */}
                 <div className="absolute top-0 left-0 h-full bg-[#ff6347] rounded-full" style={{ width: `${progress * 100}%` }}></div>
@@ -55,6 +73,7 @@ function ProgressBar({ progress, duration, currentTime, setProgress, setCurrentT
                     className="absolute top-1/2 w-4 h-4 bg-white rounded-full shadow-lg transform -translate-y-1/2 cursor-grab active:cursor-grabbing"
                     style={{ left: `calc(${progress * 100}% - 8px)` }}
                     onMouseDown={handleMouseDown}
+                    onTouchStart={handleTouchStart}
                 ></div>
             </div>
 
