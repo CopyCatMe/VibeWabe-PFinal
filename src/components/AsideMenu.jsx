@@ -18,7 +18,9 @@ function AsideMenu({ isOpen }) {
     >
       <div className="h-full w-[230px] flex flex-col p-4">
         {/* Logo */}
-        <img src="logo.png" alt="logo" className="h-auto w-35 mx-auto mb-5" />
+        <a href="/">
+          <img src="logo.png" alt="logo" className="h-auto w-35 mx-auto mb-5" />
+        </a>
         {/* Menú */}
         <nav className="flex flex-col space-y-4">
           {menu.map((item, index) => (
