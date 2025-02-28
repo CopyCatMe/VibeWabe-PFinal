@@ -10,7 +10,7 @@ function HeaderMenu({ isOpen, toggleOpen }) {
         <input
           type="text"
           placeholder="What do you want to listen to?"
-          className="rounded-3xl bg-[#2c2c2c] text-white pl-13 p-5 w-full text-sm"
+          className="rounded-3xl bg-[#2c2c2c] text-white pl-13 p-4.5 w-full text-sm"
         />
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-base" />
       </div>
