@@ -15,7 +15,7 @@ function SongInfo({ song = {} }) {
 
 
             {/* Información de la canción */}
-            <div className="hidden sm:flex text-white ml-4">
+            <div className="hidden sm:flex text-white ml-2">
                 <div>
                     <p className="font-semibold text-sm truncate max-w-[120px] cursor-pointer hover:underline">{song.title || ""}</p>
                     <p className="text-xs text-gray-400 cursor-pointer hover:underline">{song.artist || ""}</p>
