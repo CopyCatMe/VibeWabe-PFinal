@@ -34,7 +34,7 @@ function AsideMenu({ isOpen }) {
               <div
                 key={index}
                 className="flex flex-row items-center px-3 py-2 rounded-lg cursor-pointer hover:bg-[#3B3C40] hover:font-bold transition-all duration-300"
-                onClick={item.name === "Add" ? toggleModal : null} // Solo "Add" abre el modal
+                onClick={item.name === "Add" ? toggleModal : null} 
               >
                 <img src={item.img} alt={item.name} className="w-5 h-5" />
                 <h2 className="text-white ml-3">{item.name}</h2>
