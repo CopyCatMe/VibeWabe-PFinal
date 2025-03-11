@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDevice } from "./hooks/useDevice";
-import AsideMenu from './components/asideMenu';
 import HeaderMenu from './components/HeaderMenu';
 import SectionMusic from './components/SectionMusic';
 import MusicPlayer from './components/MusicPlayer';
 import PhoneMenu from './components/PhoneMenu';
 import { useNavigate } from 'react-router-dom';
+import AsideMenu from './components/AsideMenu';
 
 function Layout() {
     const navigate = useNavigate();
