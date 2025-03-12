@@ -8,7 +8,7 @@ import AsideMenu from './components/AsideMenu';
 
 function Layout() {
     const { isOpen, toggleOpen } = useDevice();
-    const [currentSongIndex, setCurrentSongIndex] = useState(null);
+    const [currentSongIndex, setCurrentSongIndex] = useState(false);
 
     return (
         <div className="flex">

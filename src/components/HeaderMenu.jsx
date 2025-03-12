@@ -36,7 +36,7 @@ function HeaderMenu({ isOpen, toggleOpen }) {
         }`}
     >
       <ToggleMenu isOpen={isOpen} toggleOpen={toggleOpen} />
-      <div className="relative w-7/7 m-2">
+      <div className="relative w-6/7 m-2">
         <input
           type="text"
           placeholder="What do you want to listen to?"
@@ -47,7 +47,7 @@ function HeaderMenu({ isOpen, toggleOpen }) {
 
       {isAuthenticated ? (
         <div
-          className="relative flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full sm:w-2/5 md:w-1/4 lg:w-1/7 p-3.5 sm:p-3.5 shadow-md rounded-3xl"
+          className=" flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full sm:w-2/5 md:w-1/4 lg:w-1/7 p-3.5 sm:p-3.5 shadow-md rounded-3xl"
           onClick={handleDropdownToggle} // Cambiar a onClick para que se despliegue al hacer clic
         >
           <img
@@ -61,7 +61,7 @@ function HeaderMenu({ isOpen, toggleOpen }) {
           {dropdownOpen && (
             <div
               ref={dropdownRef} // Asignar la referencia al dropdown
-              className="absolute right-5 top-15 mt-2 bg-[#1c1c1c] text-white rounded-lg shadow-lg w-32 p-2"
+              className="absolute right-5 top-16 mt-2 bg-[#1c1c1c] text-white rounded-3xl shadow-lg w-32 p-2"
             >
               <div
                 onClick={logout}

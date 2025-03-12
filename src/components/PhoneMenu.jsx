@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ModalAdd from "./ModalAdd";
+import { useAuth } from "../context/Auth";
 
 const menu = [
   { name: "Add", img: "/menu/add.png" },
@@ -8,10 +9,10 @@ const menu = [
   { name: "Artists", img: "/menu/artist.png" },
 ];
 
-function PhoneMenu({ isAuthenticated, user, logout }) {
+function PhoneMenu() {
+  const { isAuthenticated, user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleMenuClick = (itemName) => {
     if (itemName === "Add") {
@@ -22,13 +23,12 @@ function PhoneMenu({ isAuthenticated, user, logout }) {
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const handleDropdownToggle = () => setDropdownOpen(!dropdownOpen);
 
   return (
     <>
       {/* Botón flotante */}
       <div
-        className={`md:hidden fixed bottom-35 right-6 ${isOpen ? "bg-[#585858]" : "bg-[#ff6449]"
+        className={`md:hidden fixed bottom-36 right-4 ${isOpen ? "bg-[#585858]" : "bg-[#ff6449]"
           } px-6 py-6 rounded-full z-20 cursor-pointer shadow-lg hover:scale-110 transition-all duration-300`}
         onClick={toggleMenu}
       >
@@ -61,37 +61,13 @@ function PhoneMenu({ isAuthenticated, user, logout }) {
               <span className="text-white font-medium text-sm">{item.name}</span>
             </div>
           ))}
-          {isAuthenticated ? (
+          {isAuthenticated && (
             <div
-              className="relative flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full p-3.5 shadow-md rounded-3xl"
-              onClick={handleDropdownToggle}
-            >
-              <img
-                src={user.avatar_url}
-                alt="Perfil"
-                className="w-7 mr-3 rounded-full border-2 border-gray-600"
-              />
-              <span className="text-white">{user.name}</span>
-
-              {/* Dropdown Menu */}
-              {dropdownOpen && (
-                <div className="absolute right-5 top-15 mt-2 bg-[#1c1c1c] text-white rounded-lg shadow-lg w-32 p-2">
-                  <div
-                    onClick={logout}
-                    className="cursor-pointer hover:text-red-600 p-2 rounded-lg duration-500"
-                  >
-                    Log out
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div
-              onClick={() => handleMenuClick("Login")}
+              onClick={logout}
               className="flex items-center px-6 py-3 w-full rounded-lg cursor-pointer transition-all duration-300 bg-[#242424] hover:bg-[#3B3C40] hover:scale-105 shadow-md transform"
             >
-              <img src="/menu/login.png" alt="Login" className="w-6 h-6 mr-3" />
-              <span className="text-white font-medium text-sm">Login</span>
+              <img src={user.avatar_url} alt="Perfil" className="w-6 h-6 mr-3 rounded-full border-2 border-gray-600" />
+              <span className="text-white font-medium text-sm">Logout</span>
             </div>
           )}
         </div>
