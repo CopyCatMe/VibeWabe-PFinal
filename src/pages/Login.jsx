@@ -77,16 +77,6 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="flex items-center mb-3">
-              <input
-                type="checkbox"
-                name="remember"
-                className="mr-2"
-                checked={formData.remember}
-                onChange={handleChange}
-              />
-              <label className="text-sm">Remember Me</label>
-            </div>
             <button
               type="submit"
               className="w-full bg-[#FF5733] hover:bg-[#ff7e33] text-white py-2 rounded-lg transition duration-300"
