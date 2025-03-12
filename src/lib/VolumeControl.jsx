@@ -5,7 +5,7 @@ function VolumeControl({ audioRef, volume, setVolume, isMuted, setIsMuted }) {
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
-    if (audioRef.current) {
+    if (audioRef?.current) {
       audioRef.current.volume = newVolume;
     }
     setIsMuted(newVolume === 0);
@@ -23,7 +23,7 @@ function VolumeControl({ audioRef, volume, setVolume, isMuted, setIsMuted }) {
   };
 
   return (
-    <div className="hidden sm:flex items-center gap-3">
+    <div className="hidden lg:flex items-center gap-3">
       <button className="text-white hover:text-gray-300 transition-colors cursor-pointer" onClick={toggleMute}>
         {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
       </button>

@@ -1,13 +1,22 @@
 import { useState } from "react";
+import { useAuth } from "../context/Auth"; // Importa el contexto de autenticación
+import { getSongs } from "../lib/data";
 
-function ModalAdd({ toggleModal }) {
+
+function ModalAdd({ toggleModal, setSongs }) {
+
+    const { user } = useAuth();
+
     const [formData, setFormData] = useState({
         name: "",
         image: null,
         audio: null,
     });
+    const [loading, setLoading] = useState(false);
 
-    // Manejo de cambios en los inputs
+    const preset_name = "vibewave"; // Preset de Cloudinary
+    const cloud_name = "copycatme"; // Cloud name de Cloudinary
+
     const handleChange = (e) => {
         const { name, type, files, value } = e.target;
         setFormData((prev) => ({
@@ -16,14 +25,88 @@ function ModalAdd({ toggleModal }) {
         }));
     };
 
-    // Manejo del envío del formulario
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Datos enviados:", formData);
-        toggleModal(); // Cierra el modal después de enviar
+        setLoading(true);
+
+        const imageFile = formData.image;
+        const audioFile = formData.audio;
+
+        if (!imageFile || !audioFile) {
+            console.error("Both image and audio files are required");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            // Subir la imagen a Cloudinary
+            const imageData = new FormData();
+            imageData.append('file', imageFile);
+            imageData.append('upload_preset', preset_name);
+
+            const imageResponse = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+                {
+                    method: 'POST',
+                    body: imageData,
+                }
+            );
+            const imageResult = await imageResponse.json();
+            const imageUrl = imageResult.url
+            console.log(imageUrl)
+
+            // Subir el audio a Cloudinary
+            const audioData = new FormData();
+            audioData.append('file', audioFile);
+            audioData.append('upload_preset', preset_name);
+
+            const audioResponse = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloud_name}/video/upload`,
+                {
+                    method: 'POST',
+                    body: audioData,
+                }
+            );
+
+            const audioResult = await audioResponse.json();
+            const audioUrl = audioResult.url
+            console.log(audioUrl)
+
+            const prueba = {
+                audioUrl: audioUrl,
+                imageUrl: imageUrl,
+                songName: formData.name,
+                userName: user.name,
+            }
+
+            console.log(prueba)
+
+            const songsDBResponse = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/canciones`,
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": import.meta.env.VITE_CLIENT_API_KEY,
+                    },
+                    body: JSON.stringify(prueba)
+                }
+            );
+
+            const songsDB = await songsDBResponse.json();
+            console.log(songsDB)
+
+        } catch (error) {
+            console.error("Error de red:", error);
+        } finally {
+            setLoading(false);
+            toggleModal(false);
+            getSongs().then((body) => {
+                setSongs(body);
+            })
+        }
     };
 
-    // Manejo de clic fuera del modal para cerrarlo
     const handleOutsideClick = (e) => {
         if (e.target.classList.contains("modal-overlay")) {
             toggleModal();
@@ -36,7 +119,6 @@ function ModalAdd({ toggleModal }) {
             onClick={handleOutsideClick}
         >
             <div className="bg-[#1A1A1A] p-8 rounded-2xl shadow-2xl w-[400px] relative transform scale-95 opacity-0 animate-fadeInScale">
-                {/* Botón de cerrar */}
                 <button
                     onClick={toggleModal}
                     className="absolute top-4 right-6 text-gray-400 hover:text-white transition duration-200 text-lg bg-[#242424] px-3 py-1 rounded-xl"
@@ -46,9 +128,7 @@ function ModalAdd({ toggleModal }) {
 
                 <h2 className="text-2xl font-semibold mb-6 text-center text-[#FF5733]">Add Song</h2>
 
-                {/* Formulario */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Input para el nombre de la canción */}
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">Song Name</label>
                         <input
@@ -61,7 +141,6 @@ function ModalAdd({ toggleModal }) {
                         />
                     </div>
 
-                    {/* Input para la imagen (opcional) */}
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">Song Photo (Optional)</label>
                         <div className="flex items-center space-x-3">
@@ -85,7 +164,6 @@ function ModalAdd({ toggleModal }) {
                         </div>
                     </div>
 
-                    {/* Input para el archivo de audio (.mp3) */}
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">Audio File (.mp3)</label>
                         <div className="flex items-center space-x-3">
@@ -108,12 +186,12 @@ function ModalAdd({ toggleModal }) {
                         </div>
                     </div>
 
-                    {/* Botón de envío */}
                     <button
                         type="submit"
                         className="w-full bg-[#FF5733] text-white py-3 rounded-lg font-semibold hover:bg-[#FF6B48] transition duration-200"
+                        disabled={loading}
                     >
-                        Upload
+                        {loading ? "Uploading..." : "Upload"}
                     </button>
                 </form>
             </div>
@@ -122,4 +200,3 @@ function ModalAdd({ toggleModal }) {
 }
 
 export default ModalAdd;
-

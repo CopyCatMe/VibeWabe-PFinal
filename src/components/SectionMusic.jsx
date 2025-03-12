@@ -1,22 +1,13 @@
-import { useMemo } from "react";
-import songs from "../lib/Songs";
+import { useEffect, useMemo, useState } from "react";
+import { getSongs } from "../lib/data";
+import { useAuth } from "../context/Auth";
 
-function SectionMusic({ isOpen, onSelectSong }) {
-    // Genera colores aleatorios una sola vez y los almacena en un array
-    const songColors = useMemo(() => {
-        return songs.map(() => {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color.substring(1); // Sin el '#', porque se usa en la URL
-        });
-    }, []); // Se ejecuta solo una vez al montar el componente
+function SectionMusic({ isOpen, onSelectSong, songs, setSongs }) {
+    const { user } = useAuth();
 
-    const handleSongClick = (index) => {
+    const handleSongClick = (id) => {
         if (onSelectSong) {
-            onSelectSong(index);
+            onSelectSong(id); // Pasa el ID de la canción seleccionada al componente padre
         }
     };
 
@@ -24,22 +15,22 @@ function SectionMusic({ isOpen, onSelectSong }) {
         <div className={`transition-all duration-300 w-[80%] ${isOpen ? '' : 'ml-[-200px]'}`}>
             <div className="w-full overflow-y-scroll h-[calc(100vh-130px)]" style={{ scrollbarWidth: 'none' }}>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6 m-1 pb-0 sm:pb-15 pt-5 transition-all duration-300">
-                    {songs.slice(0, 50).map((song, index) => (
+                    {songs.slice(0, 50).map((song) => (
                         <div
-                            key={index}
+                            key={song._id}
                             className="rounded-md w-full flex flex-col items-center justify-between transition-all duration-300 hover:scale-105"
                             style={{ userSelect: 'none' }}
-                            onClick={() => handleSongClick(index)}
+                            onClick={() => handleSongClick(song._id)} // Llama a handleSongClick con el ID de la canción
                         >
                             <img
-                                src={song.image || `https://placehold.co/400x400/${songColors[index]}/white?text=${song.title[0]}`}
-                                alt={song.title || 'Unknown Song'}
+                                src={song.imageUrl}
+                                alt={song.songName || 'Unknown Song'}
                                 className="w-35 h-35 object-cover rounded-md mb-4 transition-all duration-300 hover:opacity-50 cursor-pointer"
                                 draggable="false"
                             />
                             <div className="text-center w-full">
-                                <h2 className="text-white font-semibold text-[12px] text-xs sm:text-xs">{song.title}</h2>
-                                <p className="text-gray-400 text-xs sm:text-xs">{song.artist}</p>
+                                <h2 className="text-white font-semibold text-[12px] text-xs sm:text-xs">{song.songName}</h2>
+                                <p className="text-gray-400 text-xs sm:text-xs">{song.userName}</p>
                             </div>
                         </div>
                     ))}

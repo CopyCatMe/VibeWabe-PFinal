@@ -1,30 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import ToggleMenu from "./ToggleMenu";
-import { useAuth } from "../context/Auth"; // Importa el contexto de autenticación
+import { useAuth } from "../context/Auth";
+import { getSongsByName } from "../lib/data";
 
-function HeaderMenu({ isOpen, toggleOpen }) {
-  const { isAuthenticated, logout, user } = useAuth(); // Obtiene el estado de autenticación y la función de logout
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown del menú
-  const dropdownRef = useRef(null); // Referencia al dropdown para detectar clics fuera de él
+function HeaderMenu({ isOpen, toggleOpen, setSongs }) { // Asegúrate de que setSongs esté en las props
+  const { isAuthenticated, logout, user } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  // Función para manejar el toggle del dropdown
   const handleDropdownToggle = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Cerrar el dropdown si el usuario hace clic fuera de él
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
-
-    // Agregar el event listener cuando el componente se monta
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Limpiar el event listener cuando el componente se desmonta
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -32,13 +27,19 @@ function HeaderMenu({ isOpen, toggleOpen }) {
 
   return (
     <nav
-      className={`hidden md:flex items-center justify-between p-5 w-full h-15 m-3 transition-all duration-300 ${isOpen ? "" : "ml-[-230px]"
-        }`}
+      className={`hidden md:flex items-center justify-between p-5 w-full h-15 m-3 transition-all duration-300 ${
+        isOpen ? "" : "ml-[-230px]"
+      }`}
     >
       <ToggleMenu isOpen={isOpen} toggleOpen={toggleOpen} />
       <div className="relative w-6/7 m-2">
         <input
           type="text"
+          onChange={(e) => {
+            getSongsByName(e.target.value).then((body) => {
+              setSongs(body); // Asegúrate de que setSongs esté definida
+            });
+          }}
           placeholder="What do you want to listen to?"
           className="rounded-3xl bg-[rgb(44,44,44)] text-white pl-13 p-4.5 w-full text-sm"
         />
@@ -47,8 +48,8 @@ function HeaderMenu({ isOpen, toggleOpen }) {
 
       {isAuthenticated ? (
         <div
-          className=" flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full sm:w-2/5 md:w-1/4 lg:w-1/7 p-3.5 sm:p-3.5 shadow-md rounded-3xl"
-          onClick={handleDropdownToggle} // Cambiar a onClick para que se despliegue al hacer clic
+          className="flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full sm:w-2/5 md:w-1/4 lg:w-1/7 p-3.5 sm:p-3.5 shadow-md rounded-3xl"
+          onClick={handleDropdownToggle}
         >
           <img
             src={user.avatar_url}
@@ -57,10 +58,9 @@ function HeaderMenu({ isOpen, toggleOpen }) {
           />
           <span className="text-white">{user.name}</span>
 
-          {/* Dropdown Menu */}
           {dropdownOpen && (
             <div
-              ref={dropdownRef} // Asignar la referencia al dropdown
+              ref={dropdownRef}
               className="absolute right-5 top-16 mt-2 bg-[#1c1c1c] text-white rounded-3xl shadow-lg w-32 p-2"
             >
               <div

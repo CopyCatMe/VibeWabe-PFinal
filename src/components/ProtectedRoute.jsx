@@ -1,8 +1,8 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/Auth";
 import { useEffect, useState } from "react";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute() {
   const { isAuthenticated } = useAuth(); // Obtener el estado de autenticación
   const [loading, setLoading] = useState(true);
 
@@ -12,12 +12,19 @@ function ProtectedRoute({ children }) {
     }, 2000);
   }, []);
 
-  if (!isAuthenticated) {
-    // Si no está autenticado, redirigir a la página de login
-    return loading ? <div><img className="animate-pulse m-auto mt-[10%] " src="logo.png" alt="" /></div> : <Navigate to="/login" />;
+  if (loading) {
+    return (
+      <div>
+        <img className="animate-pulse m-auto mt-[10%]" src="logo.png" alt="Loading..." />
+      </div>
+    );
   }
 
-  return children;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return <Outlet />; 
 }
 
 export default ProtectedRoute;

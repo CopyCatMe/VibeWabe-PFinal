@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { useDevice } from "./hooks/useDevice";
+import React from 'react';
+import { Outlet } from 'react-router-dom'; // ✅ Importar Outlet
 import HeaderMenu from './components/HeaderMenu';
-import SectionMusic from './components/SectionMusic';
 import MusicPlayer from './components/MusicPlayer';
 import PhoneMenu from './components/PhoneMenu';
 import AsideMenu from './components/AsideMenu';
 
-function Layout() {
-    const { isOpen, toggleOpen } = useDevice();
-    const [currentSongIndex, setCurrentSongIndex] = useState(false);
+function Layout({ toggleOpen, currentSongId, isOpen, setSongs, songs, setCurrentSongId, audioRef }) {
+    const stopCurrentSong = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            setCurrentSongIndex(null);
+        }
+    };
 
     return (
         <div className="flex">
-            <AsideMenu isOpen={isOpen} />
+            <AsideMenu isOpen={isOpen} setSongs={setSongs} />
             <div className="flex flex-col w-full items-center">
-                <HeaderMenu isOpen={isOpen} toggleOpen={toggleOpen} />
-                <SectionMusic isOpen={isOpen} onSelectSong={setCurrentSongIndex} />
+                <HeaderMenu isOpen={isOpen} toggleOpen={toggleOpen} setSongs={setSongs} stopCurrentSong={stopCurrentSong} />
+                <Outlet  />  
             </div>
             <div className="flex flex-col">
-                <MusicPlayer isOpen={isOpen} currentSongIndex={currentSongIndex} setCurrentSongIndex={setCurrentSongIndex} />
+                <MusicPlayer songs={songs} isOpen={isOpen} currentSongId={currentSongId} setCurrentSongId={setCurrentSongId} audioRef={audioRef} />
                 <PhoneMenu />
             </div>
         </div>
