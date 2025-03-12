@@ -8,7 +8,6 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    remember: false,
   });
   const [error, setError] = useState("");
 
@@ -24,7 +23,7 @@ const Login = () => {
     setError("");
 
     try {
-      await login(formData.email, formData.password, formData.remember);
+      await login(formData.email, formData.password);
 
       // Mostrar un indicador de carga
       setLoading(true);
@@ -33,7 +32,7 @@ const Login = () => {
       setTimeout(() => {
         setLoading(false);
         navigate("/");
-      }, 2000);
+      }, 1000);
 
     } catch {
       setError("Correo o contraseña incorrectos.");

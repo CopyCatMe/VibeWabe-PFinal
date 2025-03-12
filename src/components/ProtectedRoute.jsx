@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/Auth"; // Suponiendo que tienes este hook para gestionar la autenticación
+import { useAuth } from "../context/Auth";
 import { useEffect, useState } from "react";
 
 function ProtectedRoute({ children }) {
@@ -9,7 +9,7 @@ function ProtectedRoute({ children }) {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 2000);
   }, []);
 
   if (!isAuthenticated) {
