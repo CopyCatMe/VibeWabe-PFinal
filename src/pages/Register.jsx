@@ -58,7 +58,7 @@ const Register = () => {
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm mb-1">Name</label>
+              <label className="block text-sm mb-1">Username</label>
               <input
                 type="text"
                 name="name"
@@ -66,6 +66,8 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                minLength={3}
+                maxLength={12}
               />
             </div>
             <div className="mb-4">
