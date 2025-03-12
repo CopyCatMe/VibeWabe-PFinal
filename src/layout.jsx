@@ -8,17 +8,17 @@ import AsideMenu from './components/AsideMenu';
 
 function Layout() {
     const { isOpen, toggleOpen } = useDevice();
-    const [currentSongIndex, setCurrentSongIndex] = useState(null); // Mejor usar null
+    const [currentSongIndex, setCurrentSongIndex] = useState(null);
 
     return (
         <div className="flex">
             <AsideMenu isOpen={isOpen} />
             <div className="flex flex-col w-full items-center">
                 <HeaderMenu isOpen={isOpen} toggleOpen={toggleOpen} />
-                <SectionMusic onSelectSong={setCurrentSongIndex} />
+                <SectionMusic isOpen={isOpen} onSelectSong={setCurrentSongIndex} />
             </div>
             <div className="flex flex-col">
-                <MusicPlayer currentSongIndex={currentSongIndex} setCurrentSongIndex={setCurrentSongIndex} />
+                <MusicPlayer isOpen={isOpen} currentSongIndex={currentSongIndex} setCurrentSongIndex={setCurrentSongIndex} />
                 <PhoneMenu />
             </div>
         </div>

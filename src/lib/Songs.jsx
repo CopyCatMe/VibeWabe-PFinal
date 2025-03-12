@@ -7,9 +7,9 @@ const songs = [
     date: "2025-02-25",
   },
   {
-    title: "Lo-Fi Vibes",
-    artist: "Chill Beats",
-    src: "/pruebasmp3/donpollo.mp3",
+    title: "Birds Of A Feather",
+    artist: "Billie Eilish",
+    src: "https://res.cloudinary.com/copycatme/video/upload/v1741784519/vibewabe/hf8qmjxnub1kfcx6iqlt.mp3",
     date: "2025-02-22",
   },
   {

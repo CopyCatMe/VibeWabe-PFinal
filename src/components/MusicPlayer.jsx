@@ -6,9 +6,8 @@ import SongInfo from "../lib/SongInfo.jsx";
 import songs from "../lib/Songs.jsx";
 
 function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
-  // Asegurarse de que currentSongIndex sea válido
   if (currentSongIndex === null || currentSongIndex < 0 || currentSongIndex >= songs.length) {
-    return null; // No se renderiza nada si currentSongIndex no es válido
+    return null;
   }
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,27 +18,24 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
   const [isMuted, setIsMuted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
 
   const audioRef = useRef(null);
 
-  // useEffect para actualizar el audio cuando cambia currentSongIndex
   useEffect(() => {
     if (currentSongIndex !== null && songs[currentSongIndex]) {
       const audio = audioRef.current;
       audio.src = songs[currentSongIndex].src;
       audio.load();
-
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise
-          .then(() => setIsPlaying(true))  // Asegurar que se actualiza el estado
+          .then(() => setIsPlaying(true))
           .catch((error) => console.log("Error al reproducir:", error));
       }
     }
   }, [currentSongIndex]);
 
-
-  // Control de volumen y mute
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
@@ -48,7 +44,6 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
     }
   }, [volume, isMuted]);
 
-  // Actualizar el tiempo de la canción
   const updateTime = () => {
     const audio = audioRef.current;
     if (audio && !isDragging) {
@@ -69,8 +64,7 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
     } else {
-      setIsPlaying(false);
-      nextSong();  // Avanzar a la siguiente canción
+      nextSong();
     }
   };
 
@@ -88,6 +82,18 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
     setIsLooping((prevLooping) => !prevLooping);
   };
 
+  const toggleShuffle = () => {
+    setIsShuffling((prevShuffle) => !prevShuffle);
+  };
+
+  const getRandomSongIndex = () => {
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * songs.length);
+    } while (randomIndex === currentSongIndex);
+    return randomIndex;
+  };
+
   const prevSong = () => {
     if (audioRef.current.currentTime < 4) {
       setCurrentSongIndex((prev) => (prev - 1 + songs.length) % songs.length);
@@ -99,11 +105,10 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
 
   const nextSong = () => {
     setCurrentSongIndex((prev) => {
-      const nextIndex = prev + 1;
-      if (nextIndex >= songs.length) {
-        return 0;  // Volver a la primera canción si llegamos al final
+      if (isShuffling) {
+        return getRandomSongIndex();
       }
-      return nextIndex;
+      return (prev + 1) % songs.length;
     });
   };
 
@@ -137,6 +142,8 @@ function MusicPlayer({ isOpen, currentSongIndex, setCurrentSongIndex }) {
             toggleLoop={toggleLoop}
             prevSong={prevSong}
             nextSong={nextSong}
+            isShuffling={isShuffling}
+            toggleShuffle={toggleShuffle}
           />
         </div>
 

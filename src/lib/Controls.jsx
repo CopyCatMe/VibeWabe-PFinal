@@ -3,11 +3,12 @@ import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle } from "lucide-reac
 function Controls({
     isPlaying,
     togglePlayPause,
-    audioRef,
     isLooping,
     toggleLoop,
     prevSong,
     nextSong,
+    toggleShuffle,
+    isShuffling,
 }) {
     return (
         <div className="flex items-center gap-4">
@@ -44,8 +45,9 @@ function Controls({
             </button>
 
             {/* Botón de Aleatorio */}
-            <button className="transition-all cursor-pointer">
-                <Shuffle className="w-5 h-5 md:w-4 md:h-4 text-white" />
+            <button className={`transition-all cursor-pointer ${isShuffling ? 'text-[#ff6347]' : 'text-white'}`}
+            onClick={toggleShuffle}>
+                <Shuffle className="w-5 h-5 md:w-4 md:h-4" />
             </button>
         </div>
     );
