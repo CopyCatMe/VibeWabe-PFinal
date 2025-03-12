@@ -6,20 +6,23 @@ const menu = [
   { name: "Playlists", img: "/menu/playlist.png" },
   { name: "My Songs", img: "/menu/songs.png" },
   { name: "Artists", img: "/menu/artist.png" },
-  { name: "Login", img: "/menu/login.png" },
 ];
 
-function PhoneMenu() {
+function PhoneMenu({ isAuthenticated, user, logout }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleMenuClick = (itemName) => {
     if (itemName === "Add") {
       setIsModalOpen(true);
+    } else if (itemName === "Logout") {
+      logout();
     }
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  const handleDropdownToggle = () => setDropdownOpen(!dropdownOpen);
 
   return (
     <>
@@ -33,7 +36,6 @@ function PhoneMenu() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
           </svg>
-
         ) : (
           <>
             <div className="w-5 h-1 bg-white rounded-full mb-1"></div>
@@ -59,6 +61,39 @@ function PhoneMenu() {
               <span className="text-white font-medium text-sm">{item.name}</span>
             </div>
           ))}
+          {isAuthenticated ? (
+            <div
+              className="relative flex justify-center items-center cursor-pointer bg-[#1c1c1c] w-full p-3.5 shadow-md rounded-3xl"
+              onClick={handleDropdownToggle}
+            >
+              <img
+                src={user.avatar_url}
+                alt="Perfil"
+                className="w-7 mr-3 rounded-full border-2 border-gray-600"
+              />
+              <span className="text-white">{user.name}</span>
+
+              {/* Dropdown Menu */}
+              {dropdownOpen && (
+                <div className="absolute right-5 top-15 mt-2 bg-[#1c1c1c] text-white rounded-lg shadow-lg w-32 p-2">
+                  <div
+                    onClick={logout}
+                    className="cursor-pointer hover:text-red-600 p-2 rounded-lg duration-500"
+                  >
+                    Log out
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div
+              onClick={() => handleMenuClick("Login")}
+              className="flex items-center px-6 py-3 w-full rounded-lg cursor-pointer transition-all duration-300 bg-[#242424] hover:bg-[#3B3C40] hover:scale-105 shadow-md transform"
+            >
+              <img src="/menu/login.png" alt="Login" className="w-6 h-6 mr-3" />
+              <span className="text-white font-medium text-sm">Login</span>
+            </div>
+          )}
         </div>
       </nav>
 

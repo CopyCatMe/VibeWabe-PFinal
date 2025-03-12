@@ -32,9 +32,8 @@ function HeaderMenu({ isOpen, toggleOpen }) {
 
   return (
     <nav
-      className={`hidden md:flex items-center justify-between p-5 w-full h-15 m-3 transition-all duration-300 ${
-        isOpen ? "" : "ml-[-230px]"
-      }`}
+      className={`hidden md:flex items-center justify-between p-5 w-full h-15 m-3 transition-all duration-300 ${isOpen ? "" : "ml-[-230px]"
+        }`}
     >
       <ToggleMenu isOpen={isOpen} toggleOpen={toggleOpen} />
       <div className="relative w-7/7 m-2">
