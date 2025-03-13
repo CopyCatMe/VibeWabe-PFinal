@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/Auth"; // Importa el contexto de autenticación
 import { getSongs } from "../lib/data";
-
+import toast from "react-hot-toast";
 
 function ModalAdd({ toggleModal, setSongs }) {
 
@@ -99,9 +99,9 @@ function ModalAdd({ toggleModal, setSongs }) {
         } catch (error) {
             console.error("Error de red:", error);
         } finally {
+            toast("Song added successfully!", { icon: "👌🏼", style: { backgroundColor: "#333", color: "#fff" } });
             setLoading(false);
             toggleModal(false);
-            toast("Song added successfully!", { icon: "👌🏼", style: { backgroundColor: "#333", color: "#fff" } });
             getSongs().then((body) => {
                 setSongs(body);
             })
