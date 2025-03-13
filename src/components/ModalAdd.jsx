@@ -185,7 +185,7 @@ function ModalAdd({ toggleModal, setSongs }) {
                                     accept=".mp3"
                                     onChange={(e) => {
                                         const file = e.target.files[0];
-                                        if (file && file.type === "audio/mp3") {
+                                        if (file && file.type == "audio/mpeg") {
                                             handleChange(e);
                                         } else {
                                             toast("Please select a valid audio mp3 file.", { icon: "❌", style: { backgroundColor: "#333", color: "#fff" } });
