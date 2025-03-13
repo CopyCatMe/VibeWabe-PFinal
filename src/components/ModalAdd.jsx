@@ -101,6 +101,7 @@ function ModalAdd({ toggleModal, setSongs }) {
         } finally {
             setLoading(false);
             toggleModal(false);
+            toast("Song added successfully!", { icon: "👌🏼", style: { backgroundColor: "#333", color: "#fff" } });
             getSongs().then((body) => {
                 setSongs(body);
             })
@@ -142,7 +143,7 @@ function ModalAdd({ toggleModal, setSongs }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">Song Photo (Optional)</label>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Song Photo</label>
                         <div className="flex items-center space-x-3">
                             <label className="flex items-center justify-center w-full p-3 bg-[#242424] border border-[#333] rounded-lg cursor-pointer hover:bg-[#2E2E2E] transition">
                                 <input
@@ -151,6 +152,7 @@ function ModalAdd({ toggleModal, setSongs }) {
                                     accept="image/*"
                                     onChange={handleChange}
                                     className="hidden"
+                                    required
                                 />
                                 <span className="text-gray-400">Choose Image</span>
                             </label>

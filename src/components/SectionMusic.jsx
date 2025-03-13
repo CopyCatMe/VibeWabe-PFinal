@@ -14,7 +14,7 @@ function SectionMusic({ isOpen, onSelectSong, songs, setSongs }) {
     return (
         <div className={`transition-all duration-300 w-[80%] ${isOpen ? '' : 'ml-[-200px]'}`}>
             <div className="w-full overflow-y-scroll h-[calc(100vh-130px)]" style={{ scrollbarWidth: 'none' }}>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6 m-1 pb-0 sm:pb-15 pt-5 transition-all duration-300">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6 m-1 pb-15 sm:pb-20 pt-5 transition-all duration-300">
                     {songs.slice(0, 50).map((song) => (
                         <div
                             key={song._id}

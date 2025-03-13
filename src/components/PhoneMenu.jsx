@@ -1,25 +1,30 @@
 import { useState } from "react";
 import ModalAdd from "./ModalAdd";
 import { useAuth } from "../context/Auth";
+import { useNavigate } from "react-router-dom";
 
 const menu = [
+  { name: "Home", img: "/menu/home.png", url: "/" },
   { name: "Add", img: "/menu/add.png" },
-  { name: "Playlists", img: "/menu/playlist.png" },
-  { name: "My Songs", img: "/menu/songs.png" },
-  { name: "Artists", img: "/menu/artist.png" },
+  { name: "Favorites Songs", img: "/menu/playlist.png", url: "/favorites" },
+  { name: "My Songs", img: "/menu/songs.png", url: "/mysongs"},
+  { name: "Artist", img: "/menu/artist.png", url: "/artist" },
 ];
 
 function PhoneMenu() {
   const { isAuthenticated, user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleMenuClick = (itemName) => {
-    if (itemName === "Add") {
+  const handleMenuClick = (item) => {
+    if (item.name === "Add") {
       setIsModalOpen(true);
-    } else if (itemName === "Logout") {
+    } else if (item.name === "Logout") {
       logout();
-    }
+    } else (
+      navigate(item.url)
+    )
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -54,7 +59,7 @@ function PhoneMenu() {
           {menu.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleMenuClick(item.name)}
+              onClick={() => handleMenuClick(item)}
               className="flex items-center px-6 py-3 w-full rounded-lg cursor-pointer transition-all duration-300 bg-[#242424] hover:bg-[#3B3C40] hover:scale-105 shadow-md transform"
             >
               <img src={item.img} alt={item.name} className="w-6 h-6 mr-3" />
