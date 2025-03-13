@@ -7,6 +7,7 @@ function SongInfo({ song = {}, setSongs }) {
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(song.likes || 0);
     const { user } = useAuth();
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false); // Estado para deshabilitar el botón
 
     // Restablecer el estado cuando cambie la canción
     useEffect(() => {
@@ -16,6 +17,8 @@ function SongInfo({ song = {}, setSongs }) {
     }, [song, user.name]);
 
     const handleLike = async () => {
+        if (isButtonDisabled) return; // Si el botón está deshabilitado, no hacer nada
+
         const newLikeState = !liked; // Cambiar el estado del like
         const body = JSON.stringify({
             songId: song._id,
@@ -24,6 +27,13 @@ function SongInfo({ song = {}, setSongs }) {
         });
 
         console.log(body);
+
+        setIsButtonDisabled(true); // Deshabilitar el botón
+
+        // Esperar 3 segundos antes de habilitar el botón nuevamente
+        setTimeout(() => {
+            setIsButtonDisabled(false); // Volver a habilitar el botón después de 3 segundos
+        }, 5000);
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/canciones`, {
             method: "PATCH",
@@ -69,6 +79,7 @@ function SongInfo({ song = {}, setSongs }) {
                 <button
                     onClick={handleLike}
                     className="ml-6 transition-all cursor-pointer bg-[#333] hover:bg-[#444] rounded-full p-2"
+                    disabled={isButtonDisabled} // Deshabilitar el botón
                 >
                     <Heart className={`w-5 h-5 ${liked ? 'text-red-500' : 'text-white'}`} />
                 </button>
