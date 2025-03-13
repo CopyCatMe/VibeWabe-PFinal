@@ -28,12 +28,11 @@ function SongInfo({ song = {}, setSongs }) {
 
         console.log(body);
 
-        setIsButtonDisabled(true); // Deshabilitar el botón
+        setIsButtonDisabled(true); 
 
-        // Esperar 3 segundos antes de habilitar el botón nuevamente
         setTimeout(() => {
-            setIsButtonDisabled(false); // Volver a habilitar el botón después de 3 segundos
-        }, 5000);
+            setIsButtonDisabled(false); 
+        }, 1000);
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/canciones`, {
             method: "PATCH",
