@@ -54,6 +54,7 @@ function App() {
               index
               element={
                 <SectionMusic
+                  title="Recently Added"
                   isOpen={isOpen}
                   onSelectSong={(id) => setCurrentSongId(id)} // Pasa el ID correctamente
                   songs={songs}
@@ -65,6 +66,7 @@ function App() {
               path="mysongs"
               element={
                 <SectionMusic
+                  title="My songs"
                   isOpen={isOpen}
                   onSelectSong={(id) => setCurrentSongId(id)} // Pasa el ID correctamente
                   songs={songs.filter((song) => song.userName === user?.name)} // Filtra por el nombre del usuario
@@ -76,9 +78,22 @@ function App() {
               path="favorites"
               element={
                 <SectionMusic
+                  title="Favorites"
                   isOpen={isOpen}
                   onSelectSong={(id) => setCurrentSongId(id)} // Pasa el ID correctamente
-                  songs={songs.filter((song) => song.userName === user?.name)} // Filtra por el nombre del usuario
+                  songs={songs.filter((song) => song.likedBy?.includes(user?.name))} // Filtra por los usuarios que le dieron like
+                />
+              }
+            />
+            {/* ✅ Ruta "/favorites" -> También se renderiza dentro de <Layout /> */}
+            <Route
+              path="most-liked-songs"
+              element={
+                <SectionMusic
+                  title="Most Liked Songs"
+                  isOpen={isOpen}
+                  onSelectSong={(id) => setCurrentSongId(id)} // Pasa el ID correctamente
+                  songs={songs.filter((song) => song.likes > 0).sort((a, b) => b.likes - a.likes)}
                 />
               }
             />

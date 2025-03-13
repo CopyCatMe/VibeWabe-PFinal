@@ -3,11 +3,11 @@ import ModalAdd from "./ModalAdd"; // Importamos el modal
 import { useNavigate } from "react-router-dom";
 
 const menu = [
-  { name: "Home", img: "/menu/home.png", url: "/" },
   { name: "Add", img: "/menu/add.png" },
+  { name: "Home", img: "/menu/home.png", url: "/" },
   { name: "Favorites Songs", img: "/menu/playlist.png", url: "/favorites" },
   { name: "My Songs", img: "/menu/songs.png", url: "/mysongs"},
-  { name: "Artist", img: "/menu/artist.png", url: "/artist" },
+  { name: "Most Liked Songs", img: "/menu/artist.png", url: "/most-liked-songs" },
 ];
 
 function AsideMenu({ isOpen, setSongs }) {
