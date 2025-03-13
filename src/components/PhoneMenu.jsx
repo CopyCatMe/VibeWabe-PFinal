@@ -60,7 +60,9 @@ function PhoneMenu() {
             <div
               key={index}
               onClick={() => handleMenuClick(item)}
-              className="flex items-center px-6 py-3 w-full rounded-lg cursor-pointer transition-all duration-300 bg-[#242424] hover:bg-[#3B3C40] hover:scale-105 shadow-md transform"
+              className={`flex items-center px-6 py-3 w-full rounded-lg cursor-pointer transition-all duration-300 ${
+                window.location.pathname === item.url ? "bg-[#ff6347]" : "bg-[#242424]"
+              } hover:bg-[#3B3C40] hover:scale-105 shadow-md transform`}
             >
               <img src={item.img} alt={item.name} className="w-6 h-6 mr-3" />
               <span className="text-white font-medium text-sm">{item.name}</span>

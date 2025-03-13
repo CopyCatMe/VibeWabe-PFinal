@@ -4,13 +4,13 @@ import Controls from "../lib/Controls";
 import VolumeControl from "../lib/VolumeControl";
 import SongInfo from "../lib/SongInfo.jsx";
 
-function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs }) {
+function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs, setSongs }) {
     // Estados del reproductor
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
-    const [volume, setVolume] = useState(1);
+    const [volume, setVolume] = useState(localStorage.getItem("volume") || 1);
     const [isMuted, setIsMuted] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [isLooping, setIsLooping] = useState(false);
@@ -153,7 +153,7 @@ function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs }) {
             {/* Controles y información de la canción */}
             <div className="flex items-center justify-between w-full">
                 {/* Información de la canción */}
-                <SongInfo song={currentSong[0]} />
+                <SongInfo song={currentSong[0]} setSongs={setSongs}/>
 
                 {/* Controles de reproducción */}
                 <div className="flex flex-1 justify-center">

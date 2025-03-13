@@ -22,7 +22,7 @@ function Layout({ toggleOpen, currentSongId, isOpen, setSongs, songs, setCurrent
                 <Outlet  />  
             </div>
             <div className="flex flex-col">
-                <MusicPlayer songs={songs} isOpen={isOpen} currentSongId={currentSongId} setCurrentSongId={setCurrentSongId} audioRef={audioRef} />
+                <MusicPlayer songs={songs} isOpen={isOpen} currentSongId={currentSongId} setCurrentSongId={setCurrentSongId} audioRef={audioRef} setSongs={setSongs} />
                 <PhoneMenu />
             </div>
         </div>

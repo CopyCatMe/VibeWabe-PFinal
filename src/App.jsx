@@ -71,6 +71,17 @@ function App() {
                 />
               }
             />
+            {/* ✅ Ruta "/favorites" -> También se renderiza dentro de <Layout /> */}
+            <Route
+              path="favorites"
+              element={
+                <SectionMusic
+                  isOpen={isOpen}
+                  onSelectSong={(id) => setCurrentSongId(id)} // Pasa el ID correctamente
+                  songs={songs.filter((song) => song.userName === user?.name)} // Filtra por el nombre del usuario
+                />
+              }
+            />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

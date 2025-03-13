@@ -36,7 +36,9 @@ function AsideMenu({ isOpen, setSongs }) {
             {menu.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center px-3 py-2 rounded-lg cursor-pointer hover:bg-[#3B3C40] hover:font-bold transition-all duration-300"
+                className={`flex flex-row items-center px-3 py-2 rounded-lg cursor-pointer hover:bg-[#3B3C40] hover:font-bold transition-all duration-300 ${
+                  window.location.pathname === item.url ? "bg-[#ff6347] font-bold" : ""
+                }`}
                 onClick={
                   item.name === "Add"
                     ? toggleModal

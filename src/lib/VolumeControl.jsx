@@ -9,6 +9,7 @@ function VolumeControl({ audioRef, volume, setVolume, isMuted, setIsMuted }) {
       audioRef.current.volume = newVolume;
     }
     setIsMuted(newVolume === 0);
+    localStorage.setItem("volume", newVolume);
   };
 
   const toggleMute = () => {
