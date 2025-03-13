@@ -41,7 +41,7 @@ function HeaderMenu({ isOpen, toggleOpen, setSongs }) { // Asegúrate de que set
             });
           }}
           placeholder="What do you want to listen to?"
-          className="rounded-3xl bg-[rgb(44,44,44)] text-white pl-13 p-4.5 w-full text-sm"
+          className="rounded-3xl bg-[rgb(44,44,44)] text-white pl-13 p-4.5 w-full text-sm user-select-none"
         />
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-base" />
       </div>

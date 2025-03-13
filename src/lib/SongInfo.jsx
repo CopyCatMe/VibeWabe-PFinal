@@ -39,7 +39,13 @@ function SongInfo({ song = {}, setSongs }) {
         if (res.ok) {
             setLiked(newLikeState); // Actualiza el estado de "liked"
             setLikes(prevLikes => newLikeState ? prevLikes + 1 : prevLikes - 1); // Ajusta el número de likes
-            getSongs().then((body) => setSongs(body));          
+            getSongs().then((body) => {
+                setSongs(body); // Actualiza el estado de las canciones
+                // Encuentra la canción actualizada y guarda la nueva versión en localStorage
+                const updatedSong = body.find((songItem) => songItem._id === song._id);
+                localStorage.setItem("currentSong", JSON.stringify(updatedSong));
+            });
+
         } else {
             console.error("Error al actualizar el like en la base de datos:", data.message);
         }

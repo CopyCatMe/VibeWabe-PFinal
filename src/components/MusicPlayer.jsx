@@ -24,9 +24,14 @@ function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs, setSongs 
 
     // Efecto para cargar y reproducir la canción cuando cambia el ID de la canción actual
     useEffect(() => {
-        if (currentSong) {
+        if (currentSong.length > 0) {
             const audio = audioRef.current;
             audio.src = currentSong[0]?.audioUrl;
+            if (currentSongId !== localStorage.getItem("currentSongId")) {
+                localStorage.removeItem("currentSongId"); // Eliminar la canción anterior
+            }
+            localStorage.setItem("currentSongId", currentSong[0]?._id);
+            localStorage.setItem("currentSong", JSON.stringify(currentSong[0])); // Guardar la canción actual
             audio.load();
             const playPromise = audio.play();
             if (playPromise !== undefined) {
@@ -67,6 +72,7 @@ function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs, setSongs 
             audioRef.current.play();
         } else {
             nextSong();
+            localStorage.removeItem("currentSongId"); // Eliminar la canción de localStorage al cambiar
         }
     };
 
@@ -153,7 +159,7 @@ function MusicPlayer({ isOpen, currentSongId, setCurrentSongId, songs, setSongs 
             {/* Controles y información de la canción */}
             <div className="flex items-center justify-between w-full">
                 {/* Información de la canción */}
-                <SongInfo song={currentSong[0]} setSongs={setSongs}/>
+                <SongInfo song={JSON.parse(localStorage.getItem("currentSong") || "{}")} setSongs={setSongs} />
 
                 {/* Controles de reproducción */}
                 <div className="flex flex-1 justify-center">
