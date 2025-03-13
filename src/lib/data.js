@@ -12,8 +12,6 @@ export async function getSongs(){
     );
 
     const body  = await songsSection.json();
-    console.log(body);
-
     return body;
 }
 
