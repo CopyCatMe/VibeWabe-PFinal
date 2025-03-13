@@ -150,7 +150,16 @@ function ModalAdd({ toggleModal, setSongs }) {
                                     type="file"
                                     name="image"
                                     accept="image/*"
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file && file.type.startsWith("image/")) {
+                                            handleChange(e);
+                                        } else {
+                                            toast("Please select a valid image file.", { icon: "❌", style: { backgroundColor: "#333", color: "#fff" } });
+                                            console.error("Please select a valid image file.");
+                                            e.target.value = "";
+                                        }
+                                    }}
                                     className="hidden"
                                     required
                                 />
@@ -174,7 +183,16 @@ function ModalAdd({ toggleModal, setSongs }) {
                                     type="file"
                                     name="audio"
                                     accept=".mp3"
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file && file.type === "audio/mp3") {
+                                            handleChange(e);
+                                        } else {
+                                            toast("Please select a valid audio mp3 file.", { icon: "❌", style: { backgroundColor: "#333", color: "#fff" } });
+                                            console.error("Only mp3 format is allowed.");
+                                            e.target.value = "";
+                                        }
+                                    }}
                                     required
                                     className="hidden"
                                 />
